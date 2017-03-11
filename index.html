@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wiki Api Test</title>
+</head>
+<body>
+  
+</body>
+
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+  
+
+  //action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
+  var config = {
+    action: "query",
+    titles: "Main Page",
+    prop: "revisions",
+    rvprop: "content",
+    format: "json"
+  };
+
+  var params= $.param(config);
+
+  var baseUrl= "https://en.wikipedia.org/w/api.php?";
+
+  console.log(baseUrl+params);
+
+  $.ajax({
+      url: baseUrl+params,
+      methoud: "GET"
+    }).done(function(response){
+      console.log(resposne);
+    });
+
+
+
+  </script>
+
+
+</html>
