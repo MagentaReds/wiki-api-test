@@ -6,7 +6,14 @@
 </head>
 <body>
   
+  <div id="html"></div>
+  <div id="json"></div>
+
 </body>
+
+  <script type="text/javascript" src="wiky.js"></script>
+  <script type="text/javascript" src="txtwiki.js"></script>
+  <script type="text/javascript" src="wtf_wikipedia.min.js"></script>
 
   <script
     src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -14,12 +21,44 @@
     crossorigin="anonymous"></script>
 
   <script type="text/javascript">
+
+  function callback(response=null){
+    //console.log(response);
+
+  }
+
+  function doStuff1(response) {
+    var keys = Object.keys(response.query.pages);
+    console.log(keys);
+    var wikiText=response.query.pages[keys[0]].revisions[0]['*']
+    document.getElementById("json").innerHTML = wikiText;
+
+    //document.getElementById("html").innerHTML = wiky.process(wikiText);
+    //document.getElementById("html").innerHTML = txtwiki.parseWikitext(wikiText);
+    //document.getElementById("html").innerHTML = wtf_wikipedia.plaintext(wikiText);
+
+    //var wikiTextObject = 
+
+    wtf_wikipedia.from_api("Star Wars (film)", "en", function(markup){
+      var object= wtf_wikipedia.parse(markup);
+      console.log(object);
+      var plot=object.text.get("Plot")[0].text;
+      console.log(plot);
+      document.body.innerHTML = JSON.stringify(plot);
+    });
+
+  }
+
+  function doStuff(response){
+    var html= wiky.process(response.query.pages)
+  }
   
 
+  var pageTitle="Star Wars (film)";
   //action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
   var config = {
     action: "query",
-    titles: "Main Page",
+    titles: pageTitle,
     prop: "revisions",
     rvprop: "content",
     format: "json"
@@ -31,12 +70,26 @@
 
   console.log(baseUrl+params);
 
-  $.ajax({
-      url: baseUrl+params,
-      methoud: "GET"
-    }).done(function(response){
-      console.log(resposne);
-    });
+  // $.ajax({
+  //     url: baseUrl+params,
+  //     methoud: "GET"
+  //   }).done(function(response){
+  //     console.log(resposne);
+  //   });
+
+
+  $.ajax( {
+    url: "https://en.wikipedia.org/w/api.php",
+    jsonp: "callback", 
+    dataType: 'jsonp', 
+    data: config,
+    xhrFields: { withCredentials: true },
+    success: function(response) { 
+      console.log(response);
+      doStuff1(response);
+    }
+  });
+
 
 
 
